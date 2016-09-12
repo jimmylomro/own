@@ -1,7 +1,14 @@
 /*
-    Copyright (C) 2016 Jaime Lomeli-R. Univesity of Southampton
+    BRISK - Binary Robust Invariant Scalable Keypoints
+    Reference implementation of
+    [1] Stefan Leutenegger,Margarita Chli and Roland Siegwart, BRISK:
+    	Binary Robust Invariant Scalable Keypoints, in Proceedings of
+    	the IEEE International Conference on Computer Vision (ICCV2011).
 
-    This file is part of OWN.
+    Copyright (C) 2011  The Autonomous Systems Lab (ASL), ETH Zurich,
+    Stefan Leutenegger, Simon Lynen and Margarita Chli.
+
+    This file is part of BRISK.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -24,48 +31,53 @@
     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-    DESCRIPTION:
-	BFM object generates a structurally normalised list of the magnitude of the local Bessel-Fourier Moments
-	of an image. Each row of the magList is the vector result of a single pixel, therefore the size of
-	magList is (nPixels x nDims). Bessel-Fourier filters are obtained from .xml files that should be placed
-	in the directory res/bf-filters with the name format n-m.xml where n is the scaling and m is the
-	rotation repetition. The variable (nDims = n*m) is tested against the number filters in the .xml files,
-	if the dimensionality required exeeds the number of available filters nDims will be reduced to the
-	number of available filters. Note that the filters in the .xml files have a size 128 x 128 and are
-	rescaled using bicubic interpolation to the size required by the kSize variable.
-	Filter indexes vary: (m = 1,...,M) and (n = 0,...,N-1)
-	The structure of a row of magList (m,n) is (1,0),(2,0),...,(M,0),(1,1),(2,1),...,(M-1,N-1),(M,N-1)
 */
 
-#ifndef _BFM_H_
-#define _BFM_H_
+#include <opencv2/opencv.hpp>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <ctime>
+
+#include <own.h>
+
+using namespace std;
 
 
-#include <opencv2/core/core.hpp>
+int main(int argc, char ** argv) {
 
+	int K = 64;
 
-namespace own{
+	cv::Mat image = cv::imread("../res/im.jpg");
+	cv::namedWindow("Orig");
+	cv::imshow("Orig", image);
 
-	class CV_EXPORTS BFM {
+	std::vector<cv::KeyPoint> keypoints;
+	own::OwnFeatureDetector *detector;
 
-		public:
-			BFM(float thresh = 5.0, int M = 8, int N = 1, int kSize = 32);
+	detector = new own::OwnFeatureDetector(0.5,8,4,K,16);
+	
+	clock_t begin = clock();
+	detector->detect(image,keypoints);
+	clock_t end = clock();
+	
+	double secs = double(end-begin)/CLOCKS_PER_SEC;
+	cout << "Time for 10 feature maps = " << secs << endl;
+	cout << "Number of keypoints	 = " << keypoints.size() << endl;
 
-			// public methods	
-			void fillMagList(const cv::Mat &image, cv::Mat &magList);
-		
-		private:
+	std::vector<cv::Mat> maps;
+	detector->getFeatureMaps(maps);
 
-			// Parameter initialisation
-			float	thresh;
-			int	M, N, kSize;
-			std::vector<cv::Mat> re_filters;
-			std::vector<cv::Mat> im_filters;
+	for (int k = 0; k < K; k++) {
+		std::stringstream sstm;
+		sstm << k;
+		std::string str = sstm.str();
+		cv::namedWindow(str);
+		cv::imshow(str, maps[k]);
 
-			void initKernels();
-	};
+	}
+
+	cv::waitKey(0);
+
+	return 0;
 }
-
-#endif // _BFM_H_
-

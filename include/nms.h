@@ -25,47 +25,18 @@
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-    DESCRIPTION:
-	BFM object generates a structurally normalised list of the magnitude of the local Bessel-Fourier Moments
-	of an image. Each row of the magList is the vector result of a single pixel, therefore the size of
-	magList is (nPixels x nDims). Bessel-Fourier filters are obtained from .xml files that should be placed
-	in the directory res/bf-filters with the name format n-m.xml where n is the scaling and m is the
-	rotation repetition. The variable (nDims = n*m) is tested against the number filters in the .xml files,
-	if the dimensionality required exeeds the number of available filters nDims will be reduced to the
-	number of available filters. Note that the filters in the .xml files have a size 128 x 128 and are
-	rescaled using bicubic interpolation to the size required by the kSize variable.
-	Filter indexes vary: (m = 1,...,M) and (n = 0,...,N-1)
-	The structure of a row of magList (m,n) is (1,0),(2,0),...,(M,0),(1,1),(2,1),...,(M-1,N-1),(M,N-1)
+OwnFeatureMaps:
+    There are two ways of creating the feature maps, you could either call detectKeypoints and send a valid image
+    or you could first call createFeatureMaps. The first method will also detect the keypoints.
+    If detectKeypoints is called without an image argument and createFeatureMaps has not been called (i.e. featureMaps is empty)
+    the function will throw an error.
 */
 
-#ifndef _BFM_H_
-#define _BFM_H_
+#ifndef _NMS_H_
+#define _NMS_H_
 
+#include <opencv2/opencv.hpp>
 
-#include <opencv2/core/core.hpp>
+void nonMaximaSuppression(cv::Mat& src, const int sz, std::vector<cv::KeyPoint> &keypoints, const float thresh, int kernSize, const int featID);
 
-
-namespace own{
-
-	class CV_EXPORTS BFM {
-
-		public:
-			BFM(float thresh = 5.0, int M = 8, int N = 1, int kSize = 32);
-
-			// public methods	
-			void fillMagList(const cv::Mat &image, cv::Mat &magList);
-		
-		private:
-
-			// Parameter initialisation
-			float	thresh;
-			int	M, N, kSize;
-			std::vector<cv::Mat> re_filters;
-			std::vector<cv::Mat> im_filters;
-
-			void initKernels();
-	};
-}
-
-#endif // _BFM_H_
-
+#endif // _NMS_H_

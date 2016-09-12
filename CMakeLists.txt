@@ -20,19 +20,28 @@ add_library(bfm_static STATIC  src/bfm.cpp)
 target_link_libraries(bfm_static ${OpenV_LIBS})
 
 
-# Generate Bessel-Fourier Moments
+# own
+include_directories(include)
 link_directories(${OpenCV_LIB_DIR})
-add_executable(gbfm src/gbfm.cpp)
-target_link_libraries(gbfm bfm_static ${OpenCV_LIBS})
+add_library(own_static STATIC src/own.cpp src/nms.cpp)
+target_link_libraries(own_static bfm_static ${OpenV_LIBS})
 
 
-# Generate Bessel-Fourier Moments
+# Training
+link_directories(${OpenCV_LIB_DIR})
+add_executable(own_train src/own_train.cpp)
+target_link_libraries(own_train bfm_static ${OpenCV_LIBS})
+
+
+# bfm usage example
 link_directories(${OpenCV_LIB_DIR})
 add_executable(bfm_example src/bfm_example.cpp)
 target_link_libraries(bfm_example bfm_static ${OpenCV_LIBS})
 
 
+# own usage example
+link_directories(${OpenCV_LIB_DIR})
+add_executable(own_example src/own_example.cpp)
+target_link_libraries(own_example own_static ${OpenCV_LIBS})
 
-# Training
-add_executable(own_train src/own_train.cpp)
 

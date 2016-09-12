@@ -31,7 +31,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <bfm.h>
-#include <bfm_params.h>
+#include <bfm_filters.h>
 
 
 //---------------------------------------- Constructors
@@ -39,8 +39,8 @@ own::BFM::BFM(float thresh, int M, int N, int kSize) {
 
 
 	// Bound M and N to fit the maximum number of filters available
-	if (M > own::params::MAX_M) M = own::params::MAX_M;
-	if (N > own::params::MAX_N) N = own::params::MAX_N;
+	if (M > own::params::filters::MAX_M) M = own::params::filters::MAX_M;
+	if (N > own::params::filters::MAX_N) N = own::params::filters::MAX_N;
 
 	this->thresh	= thresh;
 	this->M		= M;
@@ -134,8 +134,8 @@ void own::BFM::initKernels() {
 
 	for (int i = 0; i < nDims; i++) {
 
-		cv::Mat origRe(own::params::MAX_KERN_SIZE, own::params::MAX_KERN_SIZE, CV_32FC1, own::params::filters_re[i]);
-		cv::Mat origIm(own::params::MAX_KERN_SIZE, own::params::MAX_KERN_SIZE, CV_32FC1, own::params::filters_im[i]);
+		cv::Mat origRe(own::params::filters::MAX_KERN_SIZE, own::params::filters::MAX_KERN_SIZE, CV_32FC1, own::params::filters::filters_re[i]);
+		cv::Mat origIm(own::params::filters::MAX_KERN_SIZE, own::params::filters::MAX_KERN_SIZE, CV_32FC1, own::params::filters::filters_im[i]);
 				
 		cv::Mat newRe(kSize, kSize, CV_32FC1);
 		cv::Mat newIm(kSize, kSize, CV_32FC1);

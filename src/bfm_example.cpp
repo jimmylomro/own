@@ -6,25 +6,32 @@
 
 int main (int argc, char **argv) {
 
-	cv::Mat image = cv::imread("../res/images/im.jpg", CV_LOAD_IMAGE_COLOR);
+	cv::Mat image = cv::imread("../res/dataset/butterfly/image_0001.jpg", CV_LOAD_IMAGE_COLOR);
 
 	if (image.empty()) {
 		std::cout << "Image not found!!" << std::endl;
 		return -1;
 	}
 
+
+
 	cv::Mat magList;
-	own::BFM bfm(5,8,4,50);
-	bfm.fillMagList(image, magList);
+
+	cv::FileStorage fs("../res/bfm_files/butterfly/image_0001.xml", cv::FileStorage::READ);
+	fs["magList"] >> magList;
+
+
+//	own::BFM bfm(5,8,4,50);
+//	bfm.fillMagList(image, magList);
 
 
 	cv::Mat tempMagList;
 	cv::transpose(magList, tempMagList);
 
-	cv::Mat toShow0(image.size(), CV_32FC1, tempMagList.ptr<float>(7));
-	cv::Mat toShow2(image.size(), CV_32FC1, tempMagList.ptr<float>(15));
-	cv::Mat toShow4(image.size(), CV_32FC1, tempMagList.ptr<float>(23));
-	cv::Mat toShow7(image.size(), CV_32FC1, tempMagList.ptr<float>(31));
+	cv::Mat toShow0(image.size(), CV_32FC1, tempMagList.ptr<float>(0));
+	cv::Mat toShow2(image.size(), CV_32FC1, tempMagList.ptr<float>(1));
+	cv::Mat toShow4(image.size(), CV_32FC1, tempMagList.ptr<float>(2));
+	cv::Mat toShow7(image.size(), CV_32FC1, tempMagList.ptr<float>(3));
 	
 
 
