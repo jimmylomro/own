@@ -74,12 +74,10 @@ void own::OwnFeatureMaps::createFeatureMaps(const cv::Mat& image) {
 
 void own::OwnFeatureMaps::detectKeypoints(std::vector<cv::KeyPoint>& keypoints, const cv::Mat& image) {
 
-	if (featureMaps.empty()) {
-		if (image.empty())
-			throw std::runtime_error("Error: featureMaps is empty, no image loaded");
-		else
-			createFeatureMaps(image);
-	}
+	if (image.empty())
+		throw std::runtime_error("Error: featureMaps is empty, no image loaded");
+	else
+		createFeatureMaps(image);
 	
 	keypoints.clear();
 	keypoints.reserve(own::MAX_EXPECTED_KEYPOINTS_PER_MAP * K);
