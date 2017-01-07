@@ -1,7 +1,7 @@
 ## Unsupervised learning of rotation invariant structures
 ___
 
-This code uses the opencv 2.4.11 libraries
+This code uses opencv 3 libraries
 
 
 ### Compilation
@@ -19,6 +19,7 @@ make
 
 If the compilation goes well, directories with binaries and static link libraries should appear.
 
+
 ### Usage
 
 There are several binaries in this project:
@@ -32,6 +33,11 @@ where M, N and K are the parameters described in the publication. This uses the 
 
 
 This code has been tested in Ubuntu 16.04 and OSX 10.11
+
+
+### MATLAB
+
+The Matlab code is only an example and may be tricky to compile, this functionality has only been tested in OSX 10.11.
 
 ___
 
