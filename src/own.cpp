@@ -119,7 +119,10 @@ cv::Mat own::OwnFeatureMaps::createOneFeatureMap(int centIdx, int rows, int cols
 			
 			num = 0;
 			den = 0;
-			
+
+/*
+// Code for the harmonic-mean distance measure
+
 			// Calculate numerator
 			for (int dim = 0; dim < ndims; dim++) {
 				numDif  = centrePtr[dim] - mag_rowPtr[dim];
@@ -142,7 +145,23 @@ cv::Mat own::OwnFeatureMaps::createOneFeatureMap(int centIdx, int rows, int cols
 
 			// Assign calculated membership to its position
 			map_rowPtr[col] = num/den;
+*/
+
+
+// Code for the dot product distance measure
+
+			// Calculate numerator
 			
+			for (int dim = 0; dim < ndims; dim++) {
+				numDif  = centrePtr[dim] * mag_rowPtr[dim];
+				num    += numDif;
+			}
+
+			den = exp(-1*thresh*(num-1)*(num-1));
+			
+			// Assign calculated membership to its position
+			map_rowPtr[col] = den;
+
 		}
 	}
 	return map;
@@ -156,7 +175,7 @@ std::vector<cv::KeyPoint> own::OwnFeatureMaps::detectKeypointsInMap(int centIdx)
 
 	std::vector<cv::KeyPoint> toReturn;
 
-	nonMaximaSuppression(featureMaps[centIdx], 2, toReturn, thresh, kernSize, centIdx);
+	nonMaximaSuppression(featureMaps[centIdx], 2, toReturn, 0.3, kernSize, centIdx);
 
 	return toReturn;
 }
@@ -198,9 +217,32 @@ own::OwnFeatureMaps::~OwnFeatureMaps(void) {
 //-----------------------------OwnFeatureDetector----------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------
 
-// Constructor
-own::OwnFeatureDetector::OwnFeatureDetector(float thresh, int M, int N, int K, int kernSize) {
+class OwnFeatureDetector_Impl : public own::OwnFeatureDetector {
+	public:
+		OwnFeatureDetector_Impl(float thresh = 0.5, int M = 8, int N = 1, int K = 30, int kernSize = 32);
+		~OwnFeatureDetector_Impl(void);
+			
+		float thresh;
+		int M;
+		int N;
+		int K;
+		int kernSize;
 
+		// accesors
+		void getFeatureMaps(std::vector<cv::Mat>& featureMaps);
+		
+		// cv::FeatureDetector
+		void detect(const cv::Mat& image,
+				std::vector<cv::KeyPoint>& keypoints,
+				const cv::Mat& mask=cv::Mat() );	
+		
+	private:
+		own::OwnFeatureMaps *fm;
+};
+
+
+// Constructor
+OwnFeatureDetector_Impl::OwnFeatureDetector_Impl(float thresh, int M, int N, int K, int kernSize) {
 	this->thresh	= thresh;
 	this->M 	= M;
 	this->N		= N;
@@ -212,20 +254,27 @@ own::OwnFeatureDetector::OwnFeatureDetector(float thresh, int M, int N, int K, i
 
 
 // Methods
-void own::OwnFeatureDetector::getFeatureMaps(std::vector<cv::Mat>& featureMaps) {
+void OwnFeatureDetector_Impl::getFeatureMaps(std::vector<cv::Mat>& featureMaps) {
 
 	fm->getFeatureMaps(featureMaps);
 }
 
 
-void own::OwnFeatureDetector::detectImpl(const cv::Mat& image,
+void OwnFeatureDetector_Impl::detect(const cv::Mat& image,
 					std::vector<cv::KeyPoint>& keypoints,
-					const cv::Mat& mask) const {
+					const cv::Mat& mask) {
 
 	fm->detectKeypoints(keypoints, image);
 }
 
-own::OwnFeatureDetector::~OwnFeatureDetector(void) {
+
+OwnFeatureDetector_Impl::~OwnFeatureDetector_Impl(void) {
 
 	delete fm;
+}
+
+
+cv::Ptr<own::OwnFeatureDetector> own::OwnFeatureDetector::create(float thresh, int M, int N, int K, int kernSize) {
+
+    return cv::makePtr<OwnFeatureDetector_Impl>(thresh, M, N, K, kernSize);
 }

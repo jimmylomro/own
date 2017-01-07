@@ -113,11 +113,11 @@ void own::BFM::fillMagList(const cv::Mat &image, cv::Mat &magList) {
 		E = 0;
 		rowPtr = magList.ptr<float>(row);
 		for (int i = 0; i < nDims; i++)
-			E += rowPtr[i];
+			E += rowPtr[i] * rowPtr[i];
 		
 		for (int i = 0; i < nDims; i++)
 			if (E > thresh)
-				rowPtr[i] /= E;
+				rowPtr[i] /= sqrt(E);
 			else
 				rowPtr[i] = 0;
 	}

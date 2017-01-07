@@ -46,23 +46,22 @@ using namespace std;
 
 int main(int argc, char ** argv) {
 
-	int K = 64;
+	int K = 32;
 
 	cv::Mat image = cv::imread("../res/im.jpg");
 	cv::namedWindow("Orig");
 	cv::imshow("Orig", image);
 
 	std::vector<cv::KeyPoint> keypoints;
-	own::OwnFeatureDetector *detector;
-
-	detector = new own::OwnFeatureDetector(0.5,8,4,K,16);
+	
+	cv::Ptr<own::OwnFeatureDetector> detector = own::OwnFeatureDetector::create(0.5,8,4,K,16);
 	
 	clock_t begin = clock();
 	detector->detect(image,keypoints);
 	clock_t end = clock();
 	
 	double secs = double(end-begin)/CLOCKS_PER_SEC;
-	cout << "Time for 10 feature maps = " << secs << endl;
+	cout << "Time for " << K << " feature maps = " << secs << endl;
 	cout << "Number of keypoints	 = " << keypoints.size() << endl;
 
 	std::vector<cv::Mat> maps;

@@ -88,30 +88,18 @@ namespace own{
 			std::vector<cv::KeyPoint> detectKeypointsInMap(int centIdx);
 
 	};
+	
+	
+	class CV_EXPORTS_W OwnFeatureDetector : public cv::Feature2D {
+	public:
 
+		static cv::Ptr<OwnFeatureDetector> create(float thresh = 0.5, int M = 8, int N = 1, int K = 30, int kernSize = 32);
+    	virtual void getFeatureMaps(std::vector<cv::Mat>& featureMaps) = 0;
 
-	class CV_EXPORTS OwnFeatureDetector : public cv::FeatureDetector {
-		public:
-			OwnFeatureDetector(float thresh = 0.5, int M = 8, int N = 1, int K = 30, int kernSize = 32);
-			~OwnFeatureDetector(void);
-			
-			float thresh;
-			int M;
-			int N;
-			int K;
-			int kernSize;
+    	virtual void detect(const cv::Mat& image,
+				std::vector<cv::KeyPoint>& keypoints,
+				const cv::Mat& mask=cv::Mat() ) = 0;
 
-			// accesors
-			void getFeatureMaps(std::vector<cv::Mat>& featureMaps);
-		
-		private:
-			own::OwnFeatureMaps *fm;
-
-		protected:
-			// cv::FeatureDetector
-			virtual void detectImpl(const cv::Mat& image,
-					std::vector<cv::KeyPoint>& keypoints,
-					const cv::Mat& mask=cv::Mat() ) const;		
 	};
 
 }
