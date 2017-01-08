@@ -98,7 +98,7 @@ OwnInterface::OwnInterface( int nlhs, mxArray *plhs[],
     nMaps       = 15;
     
     // init the pointers
-    detectorPtr = 0;
+    //detectorPtr = 0;
     
     // use the inputs to set
     set(nlhs, plhs, nrhs, prhs);
@@ -106,7 +106,8 @@ OwnInterface::OwnInterface( int nlhs, mxArray *plhs[],
 
 OwnInterface::~OwnInterface(){
     // cleanup pointers
-    if(detectorPtr!=0) delete detectorPtr;
+    if(detectorPtr != NULL)
+        detectorPtr.release();
 }
 
 // reset kernSize / threshold / Pattern
@@ -154,11 +155,11 @@ inline void OwnInterface::set(int nlhs, mxArray *plhs[],
         else mexErrMsgTxt("Unrecognized input option.");
     }
     // reset if requested
-    if(initDetector||detectorPtr==0){
-        if(detectorPtr!=0)
-            delete detectorPtr;
+    if(initDetector || detectorPtr == NULL){
+        if(detectorPtr != NULL){}
+            detectorPtr.release();
         
-        detectorPtr = new own::OwnFeatureDetector(threshold, 8, 4, nMaps, kernSize);
+        detectorPtr = own::OwnFeatureDetector::create(threshold, 8, 4, nMaps, kernSize);
     }
 }
 
@@ -223,7 +224,7 @@ inline void OwnInterface::detect( int nlhs, mxArray *plhs[],
             mexErrMsgTxt("Currently no image loaded.");
         
     // actual detection step
-    assert(detectorPtr);
+    assert(detectorPtr == NULL);
     detectorPtr->detect(img, keypoints);
 
     // send the keypoints to the user, if he wants it

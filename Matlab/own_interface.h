@@ -60,7 +60,7 @@ public:
     
         
 private:
-    own::OwnFeatureDetector* detectorPtr;
+    cv::Ptr<own::OwnFeatureDetector> detectorPtr;
     std::vector<cv::KeyPoint> keypoints;
     
     // Image
