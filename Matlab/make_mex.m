@@ -1,5 +1,6 @@
 % mex library build script
 % written by Stefan Leutenegger, 8/2011
+% modified by Jaime Lomeli-R., 1/2016
 
 % mex build command
 clc;

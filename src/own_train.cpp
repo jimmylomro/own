@@ -1,14 +1,24 @@
 /*
-	OWN K-Means Training
-	
-	Author: Jaime Lomeli-R.
-	Date:	6th of September of 2016
+    This file is part of OWN.
 
-	Notes: This code creates a training matrix of a fixed size of N_TRAININGSAMPS by 8*4
-	This code does not check if the file paths read from the listfile.txt are good, it only
-	assumes the .xml files exist. Behaviour if one of the files does not exist or is corrupted
-	is unknown.
-	
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    
+    Author: Jaime Lomeli-R.
+
+	Notes:
+		- This code creates a training matrix of a fixed size of N_TRAININGSAMPS by 8*4
+		This code does not check if the file paths read from the listfile.txt are good, it only
+		assumes the .xml files exist. Behaviour if one of the files does not exist or is corrupted
+		is unknown.
 */
 
 #include <iostream>

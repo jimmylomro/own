@@ -1,4 +1,6 @@
 %
+% Author: Jaime Lomeli-R.
+%
 % Usage example
 %
 
